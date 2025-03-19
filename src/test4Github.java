@@ -1,9 +1,9 @@
 // For experimenting with Git & Github since they're finicky
 
 public class test4Github {
-    private int hi;
+    private final int hi;
 
-    test4Github(int hi) {
+    public test4Github(int hi) {
         this.hi = hi;
     }
 
