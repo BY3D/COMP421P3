@@ -1,7 +1,6 @@
 # Project 3 Files
 src/sample
 SimpleJDBC.java
-db2jcc4.jar
 
 # Compiled class file
 *.class
