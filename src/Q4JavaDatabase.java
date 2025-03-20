@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // Include the db2jcc4.jar file as a library file to make the remote SQL methods work
-public class MainMenu {
+public class Q4JavaDatabase {
 
     // A basic program. Change it
     public static void main(String[] args) throws SQLException {
@@ -69,5 +69,7 @@ public class MainMenu {
         connectDB2.close();
          */
     }
+
+    // For simplicity, all methods will be in this Java file
 
 }
