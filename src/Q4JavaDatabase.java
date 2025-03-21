@@ -20,10 +20,10 @@ public class Q4JavaDatabase {
         Statement statement = connectDB2.createStatement();
         // The primary loop which the user interacts with
         Scanner input = new Scanner(System.in);
-        int userInput;
         boolean keepLooping = true;
         System.out.println("Main Menu of KABY 🚚");
         while (keepLooping) {
+            int userInput = 6;
             // There should be at least 5 options for the user, excluding quit
             System.out.println("The following options are available");
             System.out.println("1. Find the delivery date of an order");
@@ -66,7 +66,19 @@ public class Q4JavaDatabase {
                     //
                     continue;
                 case 5:
-                    //
+                    // User input should be "# #"
+                    System.out.print("Enter the order ID and employee ID: ");
+                    int orderID;
+                    int employeeID;
+                    try {
+                        String info = input.nextLine();
+                        orderID = Character.getNumericValue(info.charAt(0));
+                        employeeID = Character.getNumericValue(info.charAt(2));
+                    } catch (InputMismatchException ime) {
+                        System.out.println("Invalid input, returning to main menu");
+                        break;
+                    }
+                    reassignEmployeeOrder(statement, orderID, employeeID);
                     continue;
                 case 6:
                     keepLooping = false;
@@ -97,6 +109,20 @@ public class Q4JavaDatabase {
             String eta = rs.getString(2);
             System.out.println("Current location of order: " + location);
             System.out.println("Expected arrival date of order: " + eta);
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            String sqlState = sqle.getSQLState();
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(sqle);
+            System.out.println("SQLException: " + sqle.getMessage());
+        }
+    }
+
+    // Option 5. Reassign an employee to an order
+    private static void reassignEmployeeOrder(Statement stm, int oID, int eID) throws SQLException {
+        String update = "";
+        try {
+            stm.executeUpdate(update);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
             String sqlState = sqle.getSQLState();
