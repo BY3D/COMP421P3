@@ -1,4 +1,7 @@
-// COMP 421 - Project 3 - Group 04
+/*
+ * COMP 421 - Project 3 - Group 04
+ * Written by: Belal Yousofzai (so far)
+ */
 
 import java.sql.*;
 import java.util.InputMismatchException;
@@ -7,7 +10,6 @@ import java.util.Scanner;
 // Include the db2jcc4.jar file as a library file to make the remote SQL methods work
 public class Q4JavaDatabase {
 
-    // A basic program. Change it
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
         try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
