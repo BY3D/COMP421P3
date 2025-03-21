@@ -79,6 +79,9 @@ public class Q4JavaDatabase {
                         break;
                     }
                     reassignEmployeeOrder(statement, orderID, employeeID);
+                    System.out.println("Press any key to return to the menu");
+                    input.nextLine();
+                    input.nextLine();
                     continue;
                 case 6:
                     keepLooping = false;
