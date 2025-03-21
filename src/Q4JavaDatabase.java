@@ -10,7 +10,6 @@ public class Q4JavaDatabase {
     // A basic program. Change it
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
-        /*
         try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
         catch (Exception cnfe){ System.out.println("Class not found"); }
         // Connect to DB2
@@ -19,7 +18,6 @@ public class Q4JavaDatabase {
         String groupPassword = System.getenv("SOCSPASSWD"); // This can be given as an environment variable for now
         Connection connectDB2 = DriverManager.getConnection (url, groupId, groupPassword);
         Statement statement = connectDB2.createStatement();
-         */
         // The primary loop which the user interacts with
         Scanner input = new Scanner(System.in);
         boolean keepLooping = true;
@@ -37,12 +35,26 @@ public class Q4JavaDatabase {
             System.out.print("Enter an Option: ");
             try {
                 userInput = input.nextInt();
+                input.nextLine();
             } catch (InputMismatchException ime) {
                 userInput = -1;
             }
             switch (userInput) {
                 case 1:
-                    //
+                    System.out.print("Enter your tracking number: ");
+                    try {
+                        userInput = input.nextInt();
+                    } catch (InputMismatchException ime) {
+                        userInput = -1;
+                    }
+                    if (userInput < 0) {
+                        System.out.println("Invalid input, returning to main menu");
+                        break;
+                    }
+                    findDeliveryDate(statement, userInput);
+                    System.out.println("Press any key to return to the menu");
+                    input.nextLine();
+                    input.nextLine();
                     continue;
                 case 2:
                     //
@@ -60,16 +72,37 @@ public class Q4JavaDatabase {
                     keepLooping = false;
                     break;
                 default:
-                    System.out.println("\nInvalid option, try again\n");
+                    System.out.println("Invalid option, try again");
+                    System.out.println("Press any key to continue");
+                    input.nextLine();
             }
         }
         // Close the database connections
-        /*
+        input.close();
         statement.close();
         connectDB2.close();
-         */
     }
 
-    // For simplicity, all methods will be in this Java file
+    // For simplicity, all methods will be contained in this Java file
+
+    private static void findDeliveryDate(Statement stm, int tID) throws SQLException {
+        String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
+                + tID + ";";
+        try {
+            // System.out.println(query);
+            ResultSet rs = stm.executeQuery(query);
+            rs.next();
+            String location = rs.getString(1);
+            String eta = rs.getString(2);
+            System.out.println("Current location of order: " + location);
+            System.out.println("Expected arrival date of order: " + eta);
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            String sqlState = sqle.getSQLState();
+            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
+            System.out.println(sqle);
+            System.out.println("SQLException: " + sqle.getMessage());
+        }
+    }
 
 }
