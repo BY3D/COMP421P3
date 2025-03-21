@@ -20,9 +20,9 @@ public class Q4JavaDatabase {
         Statement statement = connectDB2.createStatement();
         // The primary loop which the user interacts with
         Scanner input = new Scanner(System.in);
+        int userInput;
         boolean keepLooping = true;
         System.out.println("Main Menu of KABY 🚚");
-        int userInput;
         while (keepLooping) {
             // There should be at least 5 options for the user, excluding quit
             System.out.println("The following options are available");
