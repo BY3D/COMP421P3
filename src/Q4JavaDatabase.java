@@ -85,6 +85,7 @@ public class Q4JavaDatabase {
 
     // For simplicity, all methods will be contained in this Java file
 
+    // Option 1. Find the delivery date of an order
     private static void findDeliveryDate(Statement stm, int tID) throws SQLException {
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
