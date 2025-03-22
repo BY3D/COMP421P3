@@ -175,29 +175,7 @@ public class Q4JavaDatabase {
             return;
         }
         int speed = 0;
-        String vehicle = "";
-        boolean notLocal = true;
-        // Second, check if the route is inner-city, domestic, or international
-        if (!o.contains(",") && o.equals(d)) { // City state (domestic) such as Singapore or Hong Kong
-            if (s == 1) vehicle = "Train";
-            else if (s == 2) vehicle = "Van";
-            notLocal = false;
-        }
-        else if (o.equals(d)) { // inner-city
-            if (s == 1) vehicle = "Lorry";
-            else if (s == 2) vehicle = "Scooter";
-            notLocal = false;
-        }
-        String originCountry = o.substring(o.indexOf(",") + 2);
-        String destCountry = d.substring(d.indexOf(",") + 2);
-        if (notLocal && originCountry.equals(destCountry)) { // domestic
-            if (s == 1) vehicle = "Train";
-            else if (s == 2) vehicle = "Van";
-        }
-        else if (notLocal && !originCountry.equals(destCountry)) { // international
-            if (s == 1) vehicle = "Airplane";
-            if (s == 2) vehicle = "Boat";
-        }
+        String vehicle = getVehicle(o, d, s);
         query = "SELECT speed FROM Transportation WHERE type LIKE '" + vehicle + "';";
         try {
             ResultSet rs = stm.executeQuery(query);
@@ -223,8 +201,32 @@ public class Q4JavaDatabase {
         }
     }
 
+    // Helper method for Option 2.
     private static String getVehicle(String o, String d, int s) {
-
+        String vehicle = "";
+        boolean notLocal = true;
+        // Second, check if the route is inner-city, domestic, or international
+        if (!o.contains(",") && o.equals(d)) { // City state (domestic) such as Singapore or Hong Kong
+            if (s == 1) vehicle = "Train";
+            else if (s == 2) vehicle = "Van";
+            notLocal = false;
+        }
+        else if (o.equals(d)) { // inner-city
+            if (s == 1) vehicle = "Lorry";
+            else if (s == 2) vehicle = "Scooter";
+            notLocal = false;
+        }
+        String originCountry = o.substring(o.indexOf(",") + 2);
+        String destCountry = d.substring(d.indexOf(",") + 2);
+        if (notLocal && originCountry.equals(destCountry)) { // domestic
+            if (s == 1) vehicle = "Train";
+            else if (s == 2) vehicle = "Van";
+        }
+        else if (notLocal && !originCountry.equals(destCountry)) { // international
+            if (s == 1) vehicle = "Airplane";
+            if (s == 2) vehicle = "Boat";
+        }
+        return vehicle;
     }
 
 
