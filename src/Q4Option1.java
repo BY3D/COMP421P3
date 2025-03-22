@@ -1,3 +1,8 @@
+/*
+ * COMP 421 - Project 3 - Group 4
+ * Written by Belal Yousofzai
+ */
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
