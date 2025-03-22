@@ -57,7 +57,6 @@ public class Q4JavaDatabase {
                         continue;
                     }
                     Q4Option1.findDeliveryDate(statement, userInput, input);
-                    //findDeliveryDate(statement, userInput, input);
                     System.out.print("Press any key to return to the menu");
                     input.nextLine();
                     System.out.println();
@@ -129,32 +128,7 @@ public class Q4JavaDatabase {
         connectDB2.close();
     }
 
-    // For simplicity, all methods will be contained in this Java file
-
-    // Option 1. Find the delivery date of an order
-    private static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
-        in.nextLine();
-        if (tID == -1) return;
-        String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
-                + tID + ";";
-        try {
-            // System.out.println(query);
-            ResultSet rs = stm.executeQuery(query);
-            rs.next();
-            String location = rs.getString(1);
-            String eta = rs.getString(2);
-            System.out.println("Parcel Info for Order " + tID);
-            System.out.println("Current location of order: " + location);
-            System.out.println("Expected arrival date of order: " + eta);
-        } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            if (sqlCode == -4470) { // if tracking number is not in database
-                System.out.print("Invalid tracking number. Enter -1 to exit, valid tracking number otherwise ");
-                tID = in.nextInt();
-                findDeliveryDate(stm, tID, in);
-            }
-        }
-    }
+    // Originally, all methods were stored here. They have now been moved to dedicated files
 
 
     // Option 2. Calculate the travel time of a package across a route
