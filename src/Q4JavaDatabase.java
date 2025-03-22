@@ -62,7 +62,22 @@ public class Q4JavaDatabase {
                     System.out.println();
                     continue;
                 case 2:
-                    //
+                    System.out.print("Enter the origin: ");
+                    String origin = "";
+                    String destination = "";
+                    try {
+                        origin = input.nextLine();
+                        System.out.print("Enter the destination: ");
+                        destination = input.nextLine();
+                    } catch (InputMismatchException ime) {
+                        System.out.println("Invalid input, returning to main menu");
+                        input.nextLine();
+                        continue;
+                    }
+                    findDeliveryTime(statement, origin, destination, input);
+                    System.out.print("Press any key to return to the menu");
+                    input.nextLine();
+                    System.out.println();
                     continue;
                 case 3:
                     //
