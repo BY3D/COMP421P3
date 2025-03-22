@@ -170,7 +170,7 @@ public class Q4JavaDatabase {
             System.out.println("Current employee of order could not be found. Returning to main menu");
             return;
         }
-        // Third, get the new employee's name
+        // Third, get the new employee's first name
         try {
             ResultSet rs = stm.executeQuery(getnewEmpName);
             rs.next();
