@@ -58,7 +58,7 @@ public class Q4JavaDatabase {
                     }
                     findDeliveryDate(statement, userInput, input);
                     System.out.println("Press any key to return to the menu");
-                    input.nextLine();
+                    //input.nextLine();
                     input.nextLine();
                     continue;
                 case 2:
@@ -84,9 +84,9 @@ public class Q4JavaDatabase {
                         System.out.println("Invalid input, returning to main menu");
                         break;
                     }
-                    reassignEmployeeOrder(statement, orderID, employeeID);
+                    reassignEmployeeOrder(statement, orderID, employeeID ,input);
                     System.out.println("Press any key to return to the menu");
-                    input.nextLine();
+                    //input.nextLine();
                     input.nextLine();
                     continue;
                 case 6:
@@ -132,9 +132,10 @@ public class Q4JavaDatabase {
     }
 
     // Option 5. Reassign an employee to an order
-    private static void reassignEmployeeOrder(Statement stm, int oID, int eID) throws SQLException {
+    private static void reassignEmployeeOrder(Statement stm, int oID, int eID, Scanner in) throws SQLException {
+        if (oID == -1 || eID == -1) return;
         String getOriginalOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
-        String getoldEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
+        String getoldEmpName = "SELECT name FROM Employee WHERE eId IN (SELECT employeeId FROM Order WHERE oId = " + oID + ");";
         String getnewEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
         String oldEmpName = "";
         String newEmpName = "";
@@ -148,28 +149,41 @@ public class Q4JavaDatabase {
             int eid = rs.getInt("employeeId");
             int q = rs.getInt("quantity");
             String sum = rs.getString("summary");
-            System.out.println("The order has now been updated: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
+            System.out.println("The order to update: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("Current order could not be found " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.print("Invalid order number. Enter -1 to exit, valid order number otherwise ");
+            oID = in.nextInt();
+            reassignEmployeeOrder(stm, oID, eID, in);
+            in.nextLine();
+            return;
         }
-        // Second, get the old employee's name
+        // Second, get the old employee's first name
         try {
             ResultSet rs = stm.executeQuery(getoldEmpName);
             rs.next();
             oldEmpName = rs.getString("name");
+            int mid = oldEmpName.indexOf(" ");
+            oldEmpName = oldEmpName.substring(0, mid);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("Current employee could not be found " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("Current employee of order could not be found. Returning to main menu");
+            return;
         }
         // Third, get the new employee's name
         try {
             ResultSet rs = stm.executeQuery(getnewEmpName);
             rs.next();
             newEmpName = rs.getString("name");
+            int mid = newEmpName.indexOf(" ");
+            newEmpName = newEmpName.substring(0, mid);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("New employee could not be found " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
+            eID = in.nextInt();
+            reassignEmployeeOrder(stm, oID, eID, in);
+            in.nextLine();
+            return;
         }
         // Fourth, edit the order's description to have the new employee
         try {
@@ -179,16 +193,18 @@ public class Q4JavaDatabase {
             desc = rs.getString("summary");
             desc = desc.replace(oldEmpName, newEmpName);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("Order could not be found " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("Order summary could not be found. Returning to main menu");
+            return;
         }
         // Fifth, update the order record to have the new employee ID
         try {
-            String updateOrder = "UPDATE Order SET employeeId = " + eID + ", summary = " + desc + " WHERE oId = " + oID + ";";
+            String updateOrder = "UPDATE Order SET employeeId = " + eID + ", summary = '" + desc + "' WHERE oId = " + oID + ";";
             stm.executeUpdate(updateOrder);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("Order could not updated " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("Order could not updated. Returning to main menu");
+            return;
         }
         // Sixth, output updated order record
         try {
@@ -200,10 +216,10 @@ public class Q4JavaDatabase {
             int eid = rs.getInt("employeeId");
             int q = rs.getInt("quantity");
             String sum = rs.getString("summary");
-            System.out.println("The order has now been updated: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
+            System.out.println("The updated order: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            System.out.println("Order could not be updated " + sqlCode);
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("The modified order could not be found. Returning to main menu");
         }
     }
 
