@@ -84,7 +84,7 @@ public class Q4JavaDatabase {
                         continue;
                     }
                     findDeliveryTime(statement, origin, destination, speed, input);
-                    System.out.print("Press any key to return to the menu");
+                    System.out.print("Press any key to return to the menu ");
                     input.nextLine();
                     System.out.println();
                     continue;
@@ -117,7 +117,7 @@ public class Q4JavaDatabase {
                     break;
                 default:
                     System.out.println("Invalid option, try again");
-                    System.out.print("Press any key to continue");
+                    System.out.print("Press any key to continue ");
                     input.nextLine();
                     input.nextLine();
             }
@@ -155,9 +155,14 @@ public class Q4JavaDatabase {
         }
     }
 
+
     // Option 2. Calculate the travel time of a package across a route
     private static void findDeliveryTime(Statement stm, String o, String d, int s, Scanner in) throws SQLException {
         if (o.equalsIgnoreCase("quit") || d.equalsIgnoreCase("quit")) return;
+        if (s < 1 || s > 2) {
+            System.out.println("Invalid speed preference, default to priority");
+            s = 1;
+        }
         // First, find the distance of the route
         int dist = 0;
         String query = "SELECT distance FROM Route WHERE origin = '" + o + "' AND destination = '" + d + "';";
@@ -166,7 +171,6 @@ public class Q4JavaDatabase {
             rs.next();
             dist = rs.getInt("distance");
         } catch (SQLException sqle) {
-            System.out.println(sqle.getMessage());
             System.out.print("A route does not exist between these locations. Enter quit to exit. Otherwise, enter a valid origin ");
             o = in.nextLine();
             System.out.print("Now enter a valid destination ");
@@ -175,6 +179,7 @@ public class Q4JavaDatabase {
             return;
         }
         int speed = 0;
+        // Second, find the correct vehicle for the route and speed preference
         String vehicle = getVehicle(o, d, s);
         query = "SELECT speed FROM Transportation WHERE type LIKE '" + vehicle + "';";
         try {
@@ -182,8 +187,7 @@ public class Q4JavaDatabase {
             rs.next();
             speed = rs.getInt("speed");
         } catch (SQLException sqle) {
-            System.out.println("Transportation error, try again");
-            System.out.println(sqle.getMessage());
+            System.out.println("The delivery vehicle or vessel could not be found. Returning to main menu");
         }
         // Third, return the travel time
         String typeOfDelivery = "";
@@ -205,7 +209,7 @@ public class Q4JavaDatabase {
     private static String getVehicle(String o, String d, int s) {
         String vehicle = "";
         boolean notLocal = true;
-        // Second, check if the route is inner-city, domestic, or international
+        // check if the route is inner-city, domestic, or international
         if (!o.contains(",") && o.equals(d)) { // City state (domestic) such as Singapore or Hong Kong
             if (s == 1) vehicle = "Train";
             else if (s == 2) vehicle = "Van";
@@ -222,7 +226,7 @@ public class Q4JavaDatabase {
             if (s == 1) vehicle = "Train";
             else if (s == 2) vehicle = "Van";
         }
-        else if (notLocal && !originCountry.equals(destCountry)) { // international
+        else if (notLocal) { // international
             if (s == 1) vehicle = "Airplane";
             if (s == 2) vehicle = "Boat";
         }
@@ -235,10 +239,12 @@ public class Q4JavaDatabase {
         //
     }
 
+
     // Option 4. Update the unit price of goods by the percentage given by the user
     private static void updateGoodsPricing(Statement stm, double priceChange, Scanner in) throws SQLException {
         //
     }
+
 
     // Option 5. Reassign an employee to an order
     private static void reassignEmployeeOrder(Statement stm, int oID, int eID, Scanner in) throws SQLException {
