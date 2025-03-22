@@ -131,6 +131,30 @@ public class Q4JavaDatabase {
         }
     }
 
+    /*
+     * NOTE
+     * For option 2, the user inputs an origin and destination
+     * Example: "Stuttgart, Germany", "Dubai, UAE"
+     * Then, if the route is international, use the airplane
+     * If route is domestic, use the lorry
+     * If route is within a city, use the van
+     * Return a query that gives the number of hours a vehicle will travel over the route
+     */
+    // Option 2. Calculate the travel time of a package across a route
+    private static void findDeliveryTime(Statement stm, String origin, String dest, Scanner in) throws SQLException {
+        //
+    }
+
+    // Option 3. Add a new Order to the Order table
+    private static void addNewOrder(Statement stm, int oID, Scanner in) throws SQLException {
+        //
+    }
+
+    // Option 4. Update the unit price of goods by the percentage given by the user
+    private static void updateGoodsPricing(Statement stm, double priceChange, Scanner in) throws SQLException {
+        //
+    }
+
     // Option 5. Reassign an employee to an order
     private static void reassignEmployeeOrder(Statement stm, int oID, int eID, Scanner in) throws SQLException {
         if (oID == -1 || eID == -1) return;
