@@ -63,7 +63,7 @@ public class Q4JavaDatabase {
                     continue;
                 case 2:
                     int speed;
-                    System.out.print("Enter 1 for a priority delivery or 2 for an economical delivery");
+                    System.out.print("Enter 1 for a priority delivery or 2 for an economical delivery ");
                     try {
                         speed = input.nextInt();
                         input.nextLine();
@@ -155,77 +155,78 @@ public class Q4JavaDatabase {
         }
     }
 
-    /*
-     * NOTE
-     * For option 2, the user inputs an origin and destination
-     * Example: "Stuttgart, Germany", "Dubai, UAE"
-     * If user selected slow
-     * International route = boat
-     * Domestic route = van
-     * Inner City route = scooter
-     * If user selected fast
-     * International route = airplane
-     * Domestic route = train
-     * Inner City route = Lorry
-     * Return a query that gives the number of hours a vehicle will travel over the route
-     */
     // Option 2. Calculate the travel time of a package across a route
     private static void findDeliveryTime(Statement stm, String o, String d, int s, Scanner in) throws SQLException {
-        if (o.equalsIgnoreCase("quit")) return;
+        if (o.equalsIgnoreCase("quit") || d.equalsIgnoreCase("quit")) return;
         // First, find the distance of the route
         int dist = 0;
-        String query = "SELECT distance FROM Route WHERE origin = " + o + " AND destination = " + d + ";";
+        String query = "SELECT distance FROM Route WHERE origin = '" + o + "' AND destination = '" + d + "';";
         try {
             ResultSet rs = stm.executeQuery(query);
             rs.next();
             dist = rs.getInt("distance");
         } catch (SQLException sqle) {
             System.out.println(sqle.getMessage());
-            System.out.print("Invalid input locations. Enter quit to exit. Otherwise, enter a valid origin");
+            System.out.print("A route does not exist between these locations. Enter quit to exit. Otherwise, enter a valid origin ");
             o = in.nextLine();
-            System.out.print("Enter a valid destination");
+            System.out.print("Now enter a valid destination ");
             d = in.nextLine();
             findDeliveryTime(stm, o, d, s, in);
             return;
         }
         int speed = 0;
         String vehicle = "";
+        boolean notLocal = true;
         // Second, check if the route is inner-city, domestic, or international
-        if (o.equals(d)) { // inner-city
-            if (s == 1) vehicle = "'Lorry'";
-            else if (s == 2) vehicle = "'Scooter'";
+        if (!o.contains(",") && o.equals(d)) { // City state (domestic) such as Singapore or Hong Kong
+            if (s == 1) vehicle = "Train";
+            else if (s == 2) vehicle = "Van";
+            notLocal = false;
         }
-        if (!o.contains(",")) { // City state (domestic) such as Singapore or Hong Kong
-            if (s == 1) vehicle = "'Train'";
-            else if (s == 2) vehicle = "'Van'";
+        else if (o.equals(d)) { // inner-city
+            if (s == 1) vehicle = "Lorry";
+            else if (s == 2) vehicle = "Scooter";
+            notLocal = false;
         }
-        String originCountry = o.substring(o.indexOf(",") + 1);
-        String destCountry = d.substring(d.indexOf(",") + 1);
-        if (originCountry.equals(destCountry)) { // domestic
-            if (s == 1) vehicle = "'Train'";
-            else if (s == 2) vehicle = "'Van'";
+        String originCountry = o.substring(o.indexOf(",") + 2);
+        String destCountry = d.substring(d.indexOf(",") + 2);
+        if (notLocal && originCountry.equals(destCountry)) { // domestic
+            if (s == 1) vehicle = "Train";
+            else if (s == 2) vehicle = "Van";
         }
-        if (!originCountry.equals(destCountry)) { // international
-            if (s == 1) vehicle = "'Airplane'";
-            if (s == 2) vehicle = "'Boat'";
+        else if (notLocal && !originCountry.equals(destCountry)) { // international
+            if (s == 1) vehicle = "Airplane";
+            if (s == 2) vehicle = "Boat";
         }
-        query = "SELECT speed FROM Transportation WHERE type LIKE " + vehicle + ";";
+        query = "SELECT speed FROM Transportation WHERE type LIKE '" + vehicle + "';";
         try {
             ResultSet rs = stm.executeQuery(query);
             rs.next();
             speed = rs.getInt("speed");
         } catch (SQLException sqle) {
+            System.out.println("Transportation error, try again");
             System.out.println(sqle.getMessage());
         }
         // Third, return the travel time
-        int travelTime = dist / speed;
         String typeOfDelivery = "";
         if (s == 1) typeOfDelivery = "priority";
         else typeOfDelivery = "economical";
-        System.out.println("From " + o + " to " + d + " the distance is " + dist);
-        System.out.println("A " + typeOfDelivery + " delivery done by a " + vehicle + " would take " + travelTime + "hours");
+        System.out.println("From " + o + " to " + d + " the distance is " + dist + "km");
+        if (speed > dist) {
+            double spd = speed / 60.0;
+            double travelMinutes = Math.ceil(dist / spd);
+            System.out.println("A " + typeOfDelivery + " delivery done by a " + vehicle + " would take approximately " + travelMinutes + " minutes");
+        }
+        else {
+            int travelTime = dist / speed;
+            System.out.println("A " + typeOfDelivery + " delivery done by a " + vehicle + " would take " + travelTime + " hours");
+        }
+    }
+
+    private static String getVehicle(String o, String d, int s) {
 
     }
+
 
     // Option 3. Add a new Order to the Order table
     private static void addNewOrder(Statement stm, int oID, Scanner in) throws SQLException {
