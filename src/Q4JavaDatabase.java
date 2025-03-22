@@ -183,11 +183,9 @@ public class Q4JavaDatabase {
             int mid = newEmpName.indexOf(" ");
             newEmpName = newEmpName.substring(0, mid + 2);
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
             eID = in.nextInt();
             reassignEmployeeOrder(stm, oID, eID, in);
-            //in.nextLine();
             return;
         }
         // Fourth, edit the order's description to have the new employee
@@ -211,7 +209,6 @@ public class Q4JavaDatabase {
                 desc = desc + newEmpName;
             }
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.println("Order summary could not be found. Returning to main menu");
             return;
         }
@@ -220,7 +217,6 @@ public class Q4JavaDatabase {
             String updateOrder = "UPDATE Order SET employeeId = " + eID + ", summary = '" + desc + "' WHERE oId = " + oID + ";";
             stm.executeUpdate(updateOrder);
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.println("Order could not updated. Returning to main menu");
             return;
         }
@@ -236,7 +232,6 @@ public class Q4JavaDatabase {
             String sum = rs.getString("summary");
             System.out.println("The updated order: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.println("The modified order could not be found. Returning to main menu");
         }
     }
