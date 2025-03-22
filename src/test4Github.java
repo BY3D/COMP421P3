@@ -24,7 +24,6 @@ public class test4Github {
     public static void testString() {
         String s = "Mohammed sent microphones to Amr, handled by Onika";
         String n = "Lizzie";
-        String o = s.indexOf("Onika");
         s = s.replace("Onika", n);
         System.out.println(s);
     }
