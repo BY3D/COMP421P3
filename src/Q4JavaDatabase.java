@@ -77,8 +77,9 @@ public class Q4JavaDatabase {
                     int employeeID;
                     try {
                         String info = input.nextLine();
-                        orderID = Character.getNumericValue(info.charAt(0));
-                        employeeID = Character.getNumericValue(info.charAt(2));
+                        String[] values = info.split(" ");
+                        orderID = Integer.valueOf(values[0]);
+                        employeeID = Integer.valueOf(values[1]);
                     } catch (InputMismatchException ime) {
                         System.out.println("Invalid input, returning to main menu");
                         break;
@@ -132,21 +133,25 @@ public class Q4JavaDatabase {
 
     // Option 5. Reassign an employee to an order
     private static void reassignEmployeeOrder(Statement stm, int oID, int eID) throws SQLException {
-        String getOldEmpId = "SELECT eId FROM Order WHERE oId = " + oID + ";";
+        String getOriginalOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
         String getoldEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
         String getnewEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
-        int oldEmpId = 0;
         String oldEmpName = "";
         String newEmpName = "";
         String desc = "";
-        // First, get the old employee's ID
+        // First, get the original order record
         try {
-            ResultSet rs = stm.executeQuery(getOldEmpId);
+            ResultSet rs = stm.executeQuery(getOriginalOrder);
             rs.next();
-            oldEmpId = rs.getInt("eId");
+            int oid = rs.getInt("oId");
+            int cid = rs.getInt("clientId");
+            int eid = rs.getInt("employeeId");
+            int q = rs.getInt("quantity");
+            String sum = rs.getString("summary");
+            System.out.println("The order has now been updated: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
-            System.out.println("Current employee could not be found " + sqlCode);
+            System.out.println("Current order could not be found " + sqlCode);
         }
         // Second, get the old employee's name
         try {
@@ -168,10 +173,10 @@ public class Q4JavaDatabase {
         }
         // Fourth, edit the order's description to have the new employee
         try {
-            String getDesc = "SELECT description FROM Order WHERE oId = " + oID + ";";
+            String getDesc = "SELECT summary FROM Order WHERE oId = " + oID + ";";
             ResultSet rs = stm.executeQuery(getDesc);
             rs.next();
-            desc = rs.getString("description");
+            desc = rs.getString("summary");
             desc = desc.replace(oldEmpName, newEmpName);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
@@ -179,11 +184,26 @@ public class Q4JavaDatabase {
         }
         // Fifth, update the order record to have the new employee ID
         try {
-            String updateOrder = "UPDATE Order SET eId = " + eID + ", description = " + desc + " WHERE oId = " + oID + ";";
+            String updateOrder = "UPDATE Order SET employeeId = " + eID + ", summary = " + desc + " WHERE oId = " + oID + ";";
             stm.executeUpdate(updateOrder);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
             System.out.println("Order could not updated " + sqlCode);
+        }
+        // Sixth, output updated order record
+        try {
+            String updatedOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
+            ResultSet rs = stm.executeQuery(updatedOrder);
+            rs.next();
+            int oid = rs.getInt("oId");
+            int cid = rs.getInt("clientId");
+            int eid = rs.getInt("employeeId");
+            int q = rs.getInt("quantity");
+            String sum = rs.getString("summary");
+            System.out.println("The order has now been updated: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            System.out.println("Order could not be updated " + sqlCode);
         }
     }
 
