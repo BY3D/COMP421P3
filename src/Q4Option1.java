@@ -12,7 +12,6 @@ public class Q4Option1 {
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
         try {
-            // System.out.println(query);
             ResultSet rs = stm.executeQuery(query);
             rs.next();
             String location = rs.getString(1);
