@@ -31,7 +31,7 @@ public class Q4JavaDatabase {
             // There should be at least 5 options for the user, excluding quit
             System.out.println("The following options are available");
             System.out.println("1. Find the delivery date of an order");
-            System.out.println("2. Estimate the fastest delivery time of a package");
+            System.out.println("2. Estimate the delivery time of a package");
             System.out.println("3. Add a new order");
             System.out.println("4. Update the price of goods to the inflation rate");
             System.out.println("5. Reassign an employee to an order");
@@ -62,6 +62,15 @@ public class Q4JavaDatabase {
                     System.out.println();
                     continue;
                 case 2:
+                    int speed;
+                    System.out.print("Enter 1 for a priority delivery or 2 for an economical delivery");
+                    try {
+                        speed = input.nextInt();
+                        input.nextLine();
+                    } catch (InputMismatchException ime) {
+                        System.out.println("Invalid speed preference, default to priority");
+                        speed = 1;
+                    }
                     System.out.print("Enter the origin: ");
                     String origin = "";
                     String destination = "";
@@ -74,7 +83,7 @@ public class Q4JavaDatabase {
                         input.nextLine();
                         continue;
                     }
-                    findDeliveryTime(statement, origin, destination, input);
+                    findDeliveryTime(statement, origin, destination, speed, input);
                     System.out.print("Press any key to return to the menu");
                     input.nextLine();
                     System.out.println();
@@ -150,14 +159,31 @@ public class Q4JavaDatabase {
      * NOTE
      * For option 2, the user inputs an origin and destination
      * Example: "Stuttgart, Germany", "Dubai, UAE"
-     * Then, if the route is international, use the airplane
-     * If route is domestic, use the lorry
-     * If route is within a city, use the van
+     * If user selected slow
+     * International route = boat
+     * Domestic route = van
+     * Inner City route = scooter
+     * If user selected fast
+     * International route = airplane
+     * Domestic route = train
+     * Inner City route = Lorry
      * Return a query that gives the number of hours a vehicle will travel over the route
      */
     // Option 2. Calculate the travel time of a package across a route
-    private static void findDeliveryTime(Statement stm, String origin, String dest, Scanner in) throws SQLException {
-        //
+    private static void findDeliveryTime(Statement stm, String o, String d, int s, Scanner in) throws SQLException {
+        if (o.equalsIgnoreCase("quit")) return;
+        String query = "SELECT distance FROM Route WHERE origin = " + o + " AND destination = " + d + ";";
+        try {
+            ResultSet rs = stm.executeQuery(query);
+        } catch (SQLException sqle) {
+            System.out.println(sqle.getMessage());
+            System.out.print("Invalid input locations. Enter quit to exit. Otherwise, enter a valid origin");
+            o = in.nextLine();
+            System.out.print("Enter a valid destination");
+            d = in.nextLine();
+            findDeliveryTime(stm, o, d, in);
+            return;
+        }
     }
 
     // Option 3. Add a new Order to the Order table
