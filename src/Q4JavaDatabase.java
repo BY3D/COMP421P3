@@ -12,8 +12,8 @@ public class Q4JavaDatabase {
 
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
-        try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
-        catch (Exception cnfe){ System.out.println("Class not found"); }
+        try { DriverManager.registerDriver( new com.ibm.db2.jcc.DB2Driver());}
+        catch (Exception cnfe){ System.out.println("Driver Class not found"); }
         // Connect to DB2
         String url = "jdbc:db2://winter2025-comp421.cs.mcgill.ca:50000/comp421";
         String groupId = "cs421g04";
