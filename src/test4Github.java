@@ -18,4 +18,18 @@ public class test4Github {
         System.out.println(hi);
     }
 
+    // Get name of current employee and new employee
+    // Get description of order
+    // Do desc = desc.replace(old Employee name, new Employee name)
+    public static void testString() {
+        String s = "Mohammed sent microphones to Amr, handled by Onika";
+        String n = "Lizzie";
+        s = s.replace("Onika", n);
+        System.out.println(s);
+    }
+
+    public static void main(String[] args) {
+        testString();
+    }
+
 }
