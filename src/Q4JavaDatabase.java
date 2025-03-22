@@ -164,7 +164,12 @@ public class Q4JavaDatabase {
             rs.next();
             oldEmpName = rs.getString("name");
             int mid = oldEmpName.indexOf(" ");
-            oldEmpName = oldEmpName.substring(0, mid);
+            oldEmpName = oldEmpName.substring(0, mid + 2);
+            /*
+             * Some employees have the same first name
+             * Capture the first letter of their last name
+             * In case we reassign employees with similar names
+             */
         } catch (SQLException sqle) {
             // int sqlCode = sqle.getErrorCode();
             System.out.println("Current employee of order could not be found. Returning to main menu");
@@ -176,7 +181,7 @@ public class Q4JavaDatabase {
             rs.next();
             newEmpName = rs.getString("name");
             int mid = newEmpName.indexOf(" ");
-            newEmpName = newEmpName.substring(0, mid);
+            newEmpName = newEmpName.substring(0, mid + 2);
         } catch (SQLException sqle) {
             // int sqlCode = sqle.getErrorCode();
             System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
@@ -191,7 +196,20 @@ public class Q4JavaDatabase {
             ResultSet rs = stm.executeQuery(getDesc);
             rs.next();
             desc = rs.getString("summary");
-            desc = desc.replace(oldEmpName, newEmpName);
+            int space = oldEmpName.indexOf(" ");
+            // If first names are equal, include first letter of last name
+            if (oldEmpName.substring(0, space).equals(newEmpName.substring(0, space))) {
+                int index = desc.indexOf("by ") + 3;
+                desc = desc.substring(0, index);
+                desc = desc + newEmpName;
+            }
+            else {
+                space = newEmpName.indexOf(" ");
+                newEmpName = newEmpName.substring(0, space);
+                int index = desc.indexOf("by ") + 3;
+                desc = desc.substring(0, index);
+                desc = desc + newEmpName;
+            }
         } catch (SQLException sqle) {
             // int sqlCode = sqle.getErrorCode();
             System.out.println("Order summary could not be found. Returning to main menu");
