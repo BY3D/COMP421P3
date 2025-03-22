@@ -172,18 +172,59 @@ public class Q4JavaDatabase {
     // Option 2. Calculate the travel time of a package across a route
     private static void findDeliveryTime(Statement stm, String o, String d, int s, Scanner in) throws SQLException {
         if (o.equalsIgnoreCase("quit")) return;
+        // First, find the distance of the route
+        int dist = 0;
         String query = "SELECT distance FROM Route WHERE origin = " + o + " AND destination = " + d + ";";
         try {
             ResultSet rs = stm.executeQuery(query);
+            rs.next();
+            dist = rs.getInt("distance");
         } catch (SQLException sqle) {
             System.out.println(sqle.getMessage());
             System.out.print("Invalid input locations. Enter quit to exit. Otherwise, enter a valid origin");
             o = in.nextLine();
             System.out.print("Enter a valid destination");
             d = in.nextLine();
-            findDeliveryTime(stm, o, d, in);
+            findDeliveryTime(stm, o, d, s, in);
             return;
         }
+        int speed = 0;
+        String vehicle = "";
+        // Second, check if the route is inner-city, domestic, or international
+        if (o.equals(d)) { // inner-city
+            if (s == 1) vehicle = "'Lorry'";
+            else if (s == 2) vehicle = "'Scooter'";
+        }
+        if (!o.contains(",")) { // City state (domestic) such as Singapore or Hong Kong
+            if (s == 1) vehicle = "'Train'";
+            else if (s == 2) vehicle = "'Van'";
+        }
+        String originCountry = o.substring(o.indexOf(",") + 1);
+        String destCountry = d.substring(d.indexOf(",") + 1);
+        if (originCountry.equals(destCountry)) { // domestic
+            if (s == 1) vehicle = "'Train'";
+            else if (s == 2) vehicle = "'Van'";
+        }
+        if (!originCountry.equals(destCountry)) { // international
+            if (s == 1) vehicle = "'Airplane'";
+            if (s == 2) vehicle = "'Boat'";
+        }
+        query = "SELECT speed FROM Transportation WHERE type LIKE " + vehicle + ";";
+        try {
+            ResultSet rs = stm.executeQuery(query);
+            rs.next();
+            speed = rs.getInt("speed");
+        } catch (SQLException sqle) {
+            System.out.println(sqle.getMessage());
+        }
+        // Third, return the travel time
+        int travelTime = dist / speed;
+        String typeOfDelivery = "";
+        if (s == 1) typeOfDelivery = "priority";
+        else typeOfDelivery = "economical";
+        System.out.println("From " + o + " to " + d + " the distance is " + dist);
+        System.out.println("A " + typeOfDelivery + " delivery done by a " + vehicle + " would take " + travelTime + "hours");
+
     }
 
     // Option 3. Add a new Order to the Order table
