@@ -88,10 +88,10 @@ public class Q4JavaDatabase {
                     System.out.println();
                     continue;
                 case 3:
-                    // Q4Option3.addNewOrder(statement, oID, input)
+                    // Q4Option3.addNewOrder(statement, oID, input);
                     continue;
                 case 4:
-                    //
+                    // Q4Option4.updateGoodsPricing(statement, priceChange, input);
                     continue;
                 case 5:
                     // User input should be "# #"
@@ -128,12 +128,6 @@ public class Q4JavaDatabase {
     }
 
     // Originally, all methods were stored here. They have now been moved to dedicated files
-
-
-    // Option 4. Update the unit price of goods by the percentage given by the user
-    private static void updateGoodsPricing(Statement stm, double priceChange, Scanner in) throws SQLException {
-        //
-    }
 
 
     // Option 5. Reassign an employee to an order
