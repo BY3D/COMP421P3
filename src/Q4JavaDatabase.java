@@ -78,8 +78,8 @@ public class Q4JavaDatabase {
                     try {
                         String info = input.nextLine();
                         String[] values = info.split(" ");
-                        orderID = Integer.valueOf(values[0]);
-                        employeeID = Integer.valueOf(values[1]);
+                        orderID = Integer.parseInt(values[0]);
+                        employeeID = Integer.parseInt(values[1]);
                     } catch (InputMismatchException ime) {
                         System.out.println("Invalid input, returning to main menu");
                         break;
@@ -182,7 +182,7 @@ public class Q4JavaDatabase {
             System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
             eID = in.nextInt();
             reassignEmployeeOrder(stm, oID, eID, in);
-            in.nextLine();
+            //in.nextLine();
             return;
         }
         // Fourth, edit the order's description to have the new employee
