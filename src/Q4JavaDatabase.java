@@ -3,6 +3,8 @@
  * Written by: Belal Yousofzai (so far)
  */
 
+import com.ibm.db2.jcc.DB2Driver;
+
 import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,7 +14,7 @@ public class Q4JavaDatabase {
 
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
-        try { DriverManager.registerDriver ( new com.ibm.db2.jcc.DB2Driver() ) ; }
+        try { DriverManager.registerDriver ( new DB2Driver() ) ; }
         catch (Exception cnfe){ System.out.println("Class not found"); }
         // Connect to DB2
         String url = "jdbc:db2://winter2025-comp421.cs.mcgill.ca:50000/comp421";
@@ -106,6 +108,7 @@ public class Q4JavaDatabase {
 
     // Option 1. Find the delivery date of an order
     private static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
+        if (tID == -1) return;
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
         try {
@@ -120,7 +123,7 @@ public class Q4JavaDatabase {
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
             if (sqlCode == -4470) { // if tracking number is not in database
-                System.out.print("Invalid tracking number. Enter a valid number ");
+                System.out.print("Invalid tracking number. Enter -1 to exit, valid tracking number otherwise ");
                 tID = in.nextInt();
                 findDeliveryDate(stm, tID, in);
             }
@@ -129,15 +132,58 @@ public class Q4JavaDatabase {
 
     // Option 5. Reassign an employee to an order
     private static void reassignEmployeeOrder(Statement stm, int oID, int eID) throws SQLException {
-        String update = "";
+        String getOldEmpId = "SELECT eId FROM Order WHERE oId = " + oID + ";";
+        String getoldEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
+        String getnewEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
+        int oldEmpId = 0;
+        String oldEmpName = "";
+        String newEmpName = "";
+        String desc = "";
+        // First, get the old employee's ID
         try {
-            stm.executeUpdate(update);
+            ResultSet rs = stm.executeQuery(getOldEmpId);
+            rs.next();
+            oldEmpId = rs.getInt("eId");
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
-            String sqlState = sqle.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(sqle);
-            System.out.println("SQLException: " + sqle.getMessage());
+            System.out.println("Current employee could not be found " + sqlCode);
+        }
+        // Second, get the old employee's name
+        try {
+            ResultSet rs = stm.executeQuery(getoldEmpName);
+            rs.next();
+            oldEmpName = rs.getString("name");
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            System.out.println("Current employee could not be found " + sqlCode);
+        }
+        // Third, get the new employee's name
+        try {
+            ResultSet rs = stm.executeQuery(getnewEmpName);
+            rs.next();
+            newEmpName = rs.getString("name");
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            System.out.println("New employee could not be found " + sqlCode);
+        }
+        // Fourth, edit the order's description to have the new employee
+        try {
+            String getDesc = "SELECT description FROM Order WHERE oId = " + oID + ";";
+            ResultSet rs = stm.executeQuery(getDesc);
+            rs.next();
+            desc = rs.getString("description");
+            desc = desc.replace(oldEmpName, newEmpName);
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            System.out.println("Order could not be found " + sqlCode);
+        }
+        // Fifth, update the order record to have the new employee ID
+        try {
+            String updateOrder = "UPDATE Order SET eId = " + eID + ", description = " + desc + " WHERE oId = " + oID + ";";
+            stm.executeUpdate(updateOrder);
+        } catch (SQLException sqle) {
+            int sqlCode = sqle.getErrorCode();
+            System.out.println("Order could not updated " + sqlCode);
         }
     }
 
