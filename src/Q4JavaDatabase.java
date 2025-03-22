@@ -57,9 +57,9 @@ public class Q4JavaDatabase {
                         continue;
                     }
                     findDeliveryDate(statement, userInput, input);
-                    System.out.println("Press any key to return to the menu");
-                    //input.nextLine();
+                    System.out.print("Press any key to return to the menu");
                     input.nextLine();
+                    System.out.println();
                     continue;
                 case 2:
                     //
@@ -82,11 +82,10 @@ public class Q4JavaDatabase {
                         employeeID = Integer.parseInt(values[1]);
                     } catch (InputMismatchException ime) {
                         System.out.println("Invalid input, returning to main menu");
-                        break;
+                        continue;
                     }
                     reassignEmployeeOrder(statement, orderID, employeeID ,input);
-                    System.out.println("Press any key to return to the menu");
-                    //input.nextLine();
+                    System.out.print("Press any key to return to the menu");
                     input.nextLine();
                     continue;
                 case 6:
@@ -94,7 +93,7 @@ public class Q4JavaDatabase {
                     break;
                 default:
                     System.out.println("Invalid option, try again");
-                    System.out.println("Press any key to continue");
+                    System.out.print("Press any key to continue");
                     input.nextLine();
                     input.nextLine();
             }
@@ -109,6 +108,7 @@ public class Q4JavaDatabase {
 
     // Option 1. Find the delivery date of an order
     private static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
+        in.nextLine();
         if (tID == -1) return;
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
@@ -151,11 +151,10 @@ public class Q4JavaDatabase {
             String sum = rs.getString("summary");
             System.out.println("The order to update: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.print("Invalid order number. Enter -1 to exit, valid order number otherwise ");
             oID = in.nextInt();
-            reassignEmployeeOrder(stm, oID, eID, in);
             in.nextLine();
+            reassignEmployeeOrder(stm, oID, eID, in);
             return;
         }
         // Second, get the old employee's first name
@@ -171,7 +170,6 @@ public class Q4JavaDatabase {
              * In case we reassign employees with similar names
              */
         } catch (SQLException sqle) {
-            // int sqlCode = sqle.getErrorCode();
             System.out.println("Current employee of order could not be found. Returning to main menu");
             return;
         }
@@ -185,6 +183,7 @@ public class Q4JavaDatabase {
         } catch (SQLException sqle) {
             System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
             eID = in.nextInt();
+            in.nextLine();
             reassignEmployeeOrder(stm, oID, eID, in);
             return;
         }
@@ -195,8 +194,9 @@ public class Q4JavaDatabase {
             rs.next();
             desc = rs.getString("summary");
             int space = oldEmpName.indexOf(" ");
-            // If first names are equal, include first letter of last name
-            if (oldEmpName.substring(0, space).equals(newEmpName.substring(0, space))) {
+            // If first names are equal, then include first letter of last name
+            if (oldEmpName.substring(0, space).equals(newEmpName.substring(0, space))
+            && oldEmpName.charAt(oldEmpName.length() - 1) != newEmpName.charAt(newEmpName.length() - 1)) {
                 int index = desc.indexOf("by ") + 3;
                 desc = desc.substring(0, index);
                 desc = desc + newEmpName;
