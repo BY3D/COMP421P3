@@ -129,5 +129,4 @@ public class Q4JavaDatabase {
 
     // Originally, all methods for the options were stored here. They have since been moved to dedicated files
 
-
 }
