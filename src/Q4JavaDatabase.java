@@ -51,9 +51,10 @@ public class Q4JavaDatabase {
                     }
                     if (userInput < 0) {
                         System.out.println("Invalid input, returning to main menu");
-                        break;
+                        input.nextLine();
+                        continue;
                     }
-                    findDeliveryDate(statement, userInput);
+                    findDeliveryDate(statement, userInput, input);
                     System.out.println("Press any key to return to the menu");
                     input.nextLine();
                     input.nextLine();
@@ -92,6 +93,7 @@ public class Q4JavaDatabase {
                     System.out.println("Invalid option, try again");
                     System.out.println("Press any key to continue");
                     input.nextLine();
+                    input.nextLine();
             }
         }
         // Close the database connections
@@ -103,7 +105,7 @@ public class Q4JavaDatabase {
     // For simplicity, all methods will be contained in this Java file
 
     // Option 1. Find the delivery date of an order
-    private static void findDeliveryDate(Statement stm, int tID) throws SQLException {
+    private static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
         try {
@@ -112,14 +114,16 @@ public class Q4JavaDatabase {
             rs.next();
             String location = rs.getString(1);
             String eta = rs.getString(2);
+            System.out.println("Parcel Info for Order " + tID);
             System.out.println("Current location of order: " + location);
             System.out.println("Expected arrival date of order: " + eta);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
-            String sqlState = sqle.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(sqle);
-            System.out.println("SQLException: " + sqle.getMessage());
+            if (sqlCode == -4470) { // if tracking number is not in database
+                System.out.print("Invalid tracking number. Enter a valid number ");
+                tID = in.nextInt();
+                findDeliveryDate(stm, tID, in);
+            }
         }
     }
 
