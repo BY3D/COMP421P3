@@ -88,7 +88,7 @@ public class Q4JavaDatabase {
                     System.out.println();
                     continue;
                 case 3:
-                    //
+                    // Q4Option3.addNewOrder(statement, oID, input)
                     continue;
                 case 4:
                     //
@@ -128,12 +128,6 @@ public class Q4JavaDatabase {
     }
 
     // Originally, all methods were stored here. They have now been moved to dedicated files
-
-
-    // Option 3. Add a new Order to the Order table
-    private static void addNewOrder(Statement stm, int oID, Scanner in) throws SQLException {
-        //
-    }
 
 
     // Option 4. Update the unit price of goods by the percentage given by the user
