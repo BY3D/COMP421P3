@@ -14,7 +14,7 @@ public class Q4JavaDatabase {
 
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
-        try {DriverManager.registerDriver (new DB2Driver());}
+        try {DriverManager.registerDriver(new DB2Driver());}
         catch (Exception cnfe){ System.out.println("Driver Class not found"); }
         // Connect to DB2
         String url = "jdbc:db2://winter2025-comp421.cs.mcgill.ca:50000/comp421";
