@@ -3,6 +3,8 @@
  * Written by: Belal Yousofzai (so far)
  */
 
+import com.ibm.db2.jcc.DB2Driver;
+
 import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,7 +14,7 @@ public class Q4JavaDatabase {
 
     public static void main(String[] args) throws SQLException {
         // Register the DB2 Driver
-        try { DriverManager.registerDriver( new com.ibm.db2.jcc.DB2Driver());}
+        try {DriverManager.registerDriver (new DB2Driver());}
         catch (Exception cnfe){ System.out.println("Driver Class not found"); }
         // Connect to DB2
         String url = "jdbc:db2://winter2025-comp421.cs.mcgill.ca:50000/comp421";
@@ -51,11 +53,12 @@ public class Q4JavaDatabase {
                     }
                     if (userInput < 0) {
                         System.out.println("Invalid input, returning to main menu");
-                        break;
+                        input.nextLine();
+                        continue;
                     }
-                    findDeliveryDate(statement, userInput);
+                    findDeliveryDate(statement, userInput, input);
                     System.out.println("Press any key to return to the menu");
-                    input.nextLine();
+                    //input.nextLine();
                     input.nextLine();
                     continue;
                 case 2:
@@ -74,15 +77,16 @@ public class Q4JavaDatabase {
                     int employeeID;
                     try {
                         String info = input.nextLine();
-                        orderID = Character.getNumericValue(info.charAt(0));
-                        employeeID = Character.getNumericValue(info.charAt(2));
+                        String[] values = info.split(" ");
+                        orderID = Integer.parseInt(values[0]);
+                        employeeID = Integer.parseInt(values[1]);
                     } catch (InputMismatchException ime) {
                         System.out.println("Invalid input, returning to main menu");
                         break;
                     }
-                    reassignEmployeeOrder(statement, orderID, employeeID);
+                    reassignEmployeeOrder(statement, orderID, employeeID ,input);
                     System.out.println("Press any key to return to the menu");
-                    input.nextLine();
+                    //input.nextLine();
                     input.nextLine();
                     continue;
                 case 6:
@@ -91,6 +95,7 @@ public class Q4JavaDatabase {
                 default:
                     System.out.println("Invalid option, try again");
                     System.out.println("Press any key to continue");
+                    input.nextLine();
                     input.nextLine();
             }
         }
@@ -103,7 +108,8 @@ public class Q4JavaDatabase {
     // For simplicity, all methods will be contained in this Java file
 
     // Option 1. Find the delivery date of an order
-    private static void findDeliveryDate(Statement stm, int tID) throws SQLException {
+    private static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
+        if (tID == -1) return;
         String query = "SELECT currentLocation, ETA FROM Tracking WHERE tId = "
                 + tID + ";";
         try {
@@ -112,28 +118,121 @@ public class Q4JavaDatabase {
             rs.next();
             String location = rs.getString(1);
             String eta = rs.getString(2);
+            System.out.println("Parcel Info for Order " + tID);
             System.out.println("Current location of order: " + location);
             System.out.println("Expected arrival date of order: " + eta);
         } catch (SQLException sqle) {
             int sqlCode = sqle.getErrorCode();
-            String sqlState = sqle.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(sqle);
-            System.out.println("SQLException: " + sqle.getMessage());
+            if (sqlCode == -4470) { // if tracking number is not in database
+                System.out.print("Invalid tracking number. Enter -1 to exit, valid tracking number otherwise ");
+                tID = in.nextInt();
+                findDeliveryDate(stm, tID, in);
+            }
         }
     }
 
     // Option 5. Reassign an employee to an order
-    private static void reassignEmployeeOrder(Statement stm, int oID, int eID) throws SQLException {
-        String update = "";
+    private static void reassignEmployeeOrder(Statement stm, int oID, int eID, Scanner in) throws SQLException {
+        if (oID == -1 || eID == -1) return;
+        String getOriginalOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
+        String getoldEmpName = "SELECT name FROM Employee WHERE eId IN (SELECT employeeId FROM Order WHERE oId = " + oID + ");";
+        String getnewEmpName = "SELECT name FROM Employee WHERE eId = " + eID + ";";
+        String oldEmpName = "";
+        String newEmpName = "";
+        String desc = "";
+        // First, get the original order record
         try {
-            stm.executeUpdate(update);
+            ResultSet rs = stm.executeQuery(getOriginalOrder);
+            rs.next();
+            int oid = rs.getInt("oId");
+            int cid = rs.getInt("clientId");
+            int eid = rs.getInt("employeeId");
+            int q = rs.getInt("quantity");
+            String sum = rs.getString("summary");
+            System.out.println("The order to update: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
         } catch (SQLException sqle) {
-            int sqlCode = sqle.getErrorCode();
-            String sqlState = sqle.getSQLState();
-            System.out.println("Code: " + sqlCode + "  sqlState: " + sqlState);
-            System.out.println(sqle);
-            System.out.println("SQLException: " + sqle.getMessage());
+            // int sqlCode = sqle.getErrorCode();
+            System.out.print("Invalid order number. Enter -1 to exit, valid order number otherwise ");
+            oID = in.nextInt();
+            reassignEmployeeOrder(stm, oID, eID, in);
+            in.nextLine();
+            return;
+        }
+        // Second, get the old employee's first name
+        try {
+            ResultSet rs = stm.executeQuery(getoldEmpName);
+            rs.next();
+            oldEmpName = rs.getString("name");
+            int mid = oldEmpName.indexOf(" ");
+            oldEmpName = oldEmpName.substring(0, mid + 2);
+            /*
+             * Some employees have the same first name
+             * Capture the first letter of their last name
+             * In case we reassign employees with similar names
+             */
+        } catch (SQLException sqle) {
+            // int sqlCode = sqle.getErrorCode();
+            System.out.println("Current employee of order could not be found. Returning to main menu");
+            return;
+        }
+        // Third, get the new employee's first name
+        try {
+            ResultSet rs = stm.executeQuery(getnewEmpName);
+            rs.next();
+            newEmpName = rs.getString("name");
+            int mid = newEmpName.indexOf(" ");
+            newEmpName = newEmpName.substring(0, mid + 2);
+        } catch (SQLException sqle) {
+            System.out.println("Invalid employee ID. Enter -1 to exit, valid employee ID otherwise ");
+            eID = in.nextInt();
+            reassignEmployeeOrder(stm, oID, eID, in);
+            return;
+        }
+        // Fourth, edit the order's description to have the new employee
+        try {
+            String getDesc = "SELECT summary FROM Order WHERE oId = " + oID + ";";
+            ResultSet rs = stm.executeQuery(getDesc);
+            rs.next();
+            desc = rs.getString("summary");
+            int space = oldEmpName.indexOf(" ");
+            // If first names are equal, include first letter of last name
+            if (oldEmpName.substring(0, space).equals(newEmpName.substring(0, space))) {
+                int index = desc.indexOf("by ") + 3;
+                desc = desc.substring(0, index);
+                desc = desc + newEmpName;
+            }
+            else {
+                space = newEmpName.indexOf(" ");
+                newEmpName = newEmpName.substring(0, space);
+                int index = desc.indexOf("by ") + 3;
+                desc = desc.substring(0, index);
+                desc = desc + newEmpName;
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Order summary could not be found. Returning to main menu");
+            return;
+        }
+        // Fifth, update the order record to have the new employee ID
+        try {
+            String updateOrder = "UPDATE Order SET employeeId = " + eID + ", summary = '" + desc + "' WHERE oId = " + oID + ";";
+            stm.executeUpdate(updateOrder);
+        } catch (SQLException sqle) {
+            System.out.println("Order could not updated. Returning to main menu");
+            return;
+        }
+        // Sixth, output updated order record
+        try {
+            String updatedOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
+            ResultSet rs = stm.executeQuery(updatedOrder);
+            rs.next();
+            int oid = rs.getInt("oId");
+            int cid = rs.getInt("clientId");
+            int eid = rs.getInt("employeeId");
+            int q = rs.getInt("quantity");
+            String sum = rs.getString("summary");
+            System.out.println("The updated order: " + oid + " " + cid + " " + eid + " " + q + " " + sum);
+        } catch (SQLException sqle) {
+            System.out.println("The modified order could not be found. Returning to main menu");
         }
     }
 
