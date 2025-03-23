@@ -39,7 +39,7 @@
                  System.out.println("Invalid Client ID. Please try again.");
                  continue;
              }
-             String clientCheckSQL = "SELECT cId FROM Client WHERE cId = " + clientId;
+             String clientCheckSQL = "SELECT cId FROM Client WHERE cId = " + clientId + ";";
              rs = stm.executeQuery(clientCheckSQL);
              if (rs.next()) {
                  break;
@@ -57,7 +57,7 @@
                  System.out.println("Invalid Goods ID. Please try again.");
                  continue;
              }
-             String goodsCheckSQL = "SELECT gId FROM Goods WHERE gId = " + goodsId;
+             String goodsCheckSQL = "SELECT gId FROM Goods WHERE gId = " + goodsId + ";";
              rs = stm.executeQuery(goodsCheckSQL);
              if (rs.next()) {
                  break;
@@ -75,7 +75,7 @@
                  System.out.println("Invalid Employee ID. Please try again.");
                  continue;
              }
-             String employeeCheckSQL = "SELECT eId FROM Employee WHERE eId = " + employeeId;
+             String employeeCheckSQL = "SELECT eId FROM Employee WHERE eId = " + employeeId + ";";
              rs = stm.executeQuery(employeeCheckSQL);
              if (rs.next()) {
                  break;
