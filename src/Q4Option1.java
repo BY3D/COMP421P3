@@ -1,6 +1,8 @@
 /*
  * COMP 421 - Project 3 - Group 4
- * Written by Belal Yousofzai
+ * Option 1. Find the delivery date of an order
+ * Input: Tracking number ID
+ * Output: Current location of order and expected delivery date
  */
 
 import java.sql.ResultSet;
@@ -10,7 +12,6 @@ import java.util.Scanner;
 
 public class Q4Option1 {
 
-    // Option 1. Find the delivery date of an order
     public static void findDeliveryDate(Statement stm, int tID, Scanner in) throws SQLException {
         in.nextLine();
         if (tID == -1) return;

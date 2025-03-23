@@ -1,6 +1,8 @@
 /*
  * COMP 421 - Project 3 - Group 4
- * Written by Belal Yousofzai
+ * Option 2. Calculate the travel time of a package across a route
+ * Input: Origin and Destination locations that exist in the Route relation
+ * Output: The distance of the route and the travel time of the route
  */
 
 import java.sql.ResultSet;
@@ -10,7 +12,6 @@ import java.util.Scanner;
 
 public class Q4Option2 {
 
-    // Option 2. Calculate the travel time of a package across a route
     public static void findDeliveryTime(Statement stm, String o, String d, int s, Scanner in) throws SQLException {
         if (o.equalsIgnoreCase("quit") || d.equalsIgnoreCase("quit")) return;
         if (s < 1 || s > 2) {

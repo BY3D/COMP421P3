@@ -1,6 +1,8 @@
 /*
  * COMP 421 - Project 3 - Group 4
- * Written by Belal Yousofzai
+ * Option 5. Reassign an employee to an order
+ * Input: Order ID and the replacement Employee ID
+ * Output: The order record in its previous and updated state
  */
 
 import java.sql.ResultSet;
@@ -10,7 +12,6 @@ import java.util.Scanner;
 
 public class Q4Option5 {
 
-    // Option 5. Reassign an employee to an order
     public static void reassignEmployeeOrder(Statement stm, int oID, int eID, Scanner in) throws SQLException {
         if (oID == -1 || eID == -1) return;
         String getOriginalOrder = "SELECT oId, clientId, employeeId, quantity, summary FROM Order WHERE oId = " + oID + ";";
