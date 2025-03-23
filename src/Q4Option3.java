@@ -16,7 +16,7 @@
          in.nextLine();
          if (orderId == -1) return;
          
-         String orderCheckSQL = "SELECT oId FROM \"Order\" WHERE oId = " + orderId;
+         String orderCheckSQL = "SELECT oId FROM Order WHERE oId = " + orderId + ";";
          ResultSet rs = stm.executeQuery(orderCheckSQL);
          if (rs.next()) {
              System.out.print("Order ID already exists. Enter a new Order ID (or -1 to exit): ");
