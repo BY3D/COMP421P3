@@ -89,6 +89,7 @@
              System.out.print("Enter Quantity: ");
              try {
                  quantity = Integer.parseInt(in.nextLine());
+                 if (quantity < 0) throw new NumberFormatException();
                  break;
              } catch (NumberFormatException e) {
                  System.out.println("Invalid Quantity. Please try again.");
@@ -97,10 +98,9 @@
          
          System.out.print("Enter Order Summary: ");
          String summary = in.nextLine();
-         
 
-         String insertSQL = "INSERT INTO \"Order\" (oId, clientId, goodsId, employeeId, quantity, summary) " +
-                            "VALUES (" + orderId + ", " + clientId + ", " + goodsId + ", " + employeeId + ", " + quantity + ", '" + summary + "')";
+         String insertSQL = "INSERT INTO Order (oId, clientId, goodsId, employeeId, quantity, summary) " +
+                            "VALUES (" + orderId + ", " + clientId + ", " + goodsId + ", " + employeeId + ", " + quantity + ", '" + summary + "');";
          try {
              int result = stm.executeUpdate(insertSQL);
              if (result > 0) {
