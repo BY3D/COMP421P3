@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class Q4JavaDatabase {
 
     public static void main(String[] args) throws SQLException {
+
         // Register the DB2 Driver
         try {DriverManager.registerDriver(new DB2Driver());}
         catch (Exception cnfe){ System.out.println("Driver Class not found"); }
@@ -26,6 +27,7 @@ public class Q4JavaDatabase {
         boolean keepLooping = true;
         System.out.println("Main Menu of KABY 🚚");
         while (keepLooping) {
+
             int userInput = 6;
             // There should be at least 5 options for the user, excluding quit
             System.out.println("The following options are available");
@@ -36,6 +38,7 @@ public class Q4JavaDatabase {
             System.out.println("5. Reassign an employee to an order");
             System.out.println("6. Quit");
             System.out.print("Enter an Option: ");
+
             try {
                 userInput = input.nextInt();
                 input.nextLine();
@@ -43,6 +46,7 @@ public class Q4JavaDatabase {
                 userInput = -1;
             }
             switch (userInput) {
+
                 case 1:
                     System.out.print("Enter your tracking number: ");
                     try {
@@ -60,6 +64,7 @@ public class Q4JavaDatabase {
                     input.nextLine();
                     System.out.println();
                     continue;
+
                 case 2:
                     int speed;
                     System.out.print("Enter 1 for a priority delivery or 2 for an economical delivery ");
@@ -87,6 +92,7 @@ public class Q4JavaDatabase {
                     input.nextLine();
                     System.out.println();
                     continue;
+
                 case 3:
                     System.out.print("Enter your Order ID: ");
                     try {
@@ -141,22 +147,25 @@ public class Q4JavaDatabase {
                     System.out.print("Press any key to return to the menu");
                     input.nextLine();
                     continue;
+
                 case 6:
                     keepLooping = false;
                     break;
+
                 default:
                     System.out.println("Invalid option, try again");
                     System.out.print("Press any key to continue ");
                     input.nextLine();
                     input.nextLine();
+
             }
+
         }
         // Close the database connections
         input.close();
         statement.close();
         connectDB2.close();
-    }
 
-    // Originally, all methods for the options were stored here. They have since been moved to dedicated files
+    }
 
 }
