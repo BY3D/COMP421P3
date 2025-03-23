@@ -46,7 +46,7 @@
              
              double factor = 1 + (percentage / 100.0);
              
-             String updateSQL = "UPDATE Goods SET unitPrice = unitPrice * " + factor + " WHERE gId = " + goodsId;
+             String updateSQL = "UPDATE Goods SET unitPrice = unitPrice * " + factor + " WHERE gId = " + goodsId + ";";
              int rowsAffected = stm.executeUpdate(updateSQL);
              System.out.println("Updated unit price for Goods with ID " + goodsId + " using a factor of " + factor +
                                 ". Rows affected: " + rowsAffected);
