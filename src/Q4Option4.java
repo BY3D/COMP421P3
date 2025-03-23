@@ -17,7 +17,7 @@
          in.nextLine();
          if (orderID == -1) return;
          
-         String query = "SELECT goodsId FROM \"Order\" WHERE oId = " + orderID;
+         String query = "SELECT goodsId FROM Order WHERE oId = " + orderID + ";";
          try {
              ResultSet rs = stm.executeQuery(query);
              if (!rs.next()) {//no row is returned
