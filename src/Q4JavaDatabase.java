@@ -88,11 +88,41 @@ public class Q4JavaDatabase {
                     System.out.println();
                     continue;
                 case 3:
-                    // Q4Option3.addNewOrder(statement, oID, input);
-                    continue;
+                    System.out.print("Enter your Order ID: ");
+                    try {
+                        userInput = input.nextInt();
+                    } catch (InputMismatchException ime) {
+                        userInput = -1;
+                    }
+                    if (userInput < 0) {
+                        System.out.println("Invalid Order ID, returning to main menu");
+                        input.nextLine();
+                        continue;
+                    }
+                    Q4Option3.addNewOrder(statement, userInput, input);
+                    System.out.print("Press any key to return to the menu");
+                    input.nextLine();
+                    System.out.println();
+                continue;
+                
                 case 4:
-                    // Q4Option4.updateGoodsPricing(statement, priceChange, input);
+                    System.out.print("Enter your order ID: ");
+                    try {
+                        userInput = input.nextInt();
+                    } catch (InputMismatchException ime) {
+                        userInput = -1;
+                    }
+                    if (userInput < 0) {
+                        System.out.println("Invalid input, returning to main menu");
+                        input.nextLine();
+                        continue;
+                    }
+                    Q4Option4.updateGoodsPricing(statement, userInput, input);
+                    System.out.print("Press any key to return to the menu");
+                    input.nextLine();
+                    System.out.println();
                     continue;
+                                
                 case 5:
                     // User input should be "# #"
                     System.out.print("Enter the order ID and employee ID: ");
