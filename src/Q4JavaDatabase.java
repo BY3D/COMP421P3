@@ -34,7 +34,7 @@ public class Q4JavaDatabase {
             System.out.println("1. Find the delivery date of an order");
             System.out.println("2. Estimate the delivery time of a package");
             System.out.println("3. Add a new order");
-            System.out.println("4. Update the price of goods to the inflation rate");
+            System.out.println("4. Update the price of goods stored in an order");
             System.out.println("5. Reassign an employee to an order");
             System.out.println("6. Quit");
             System.out.print("Enter an Option: ");
@@ -73,6 +73,7 @@ public class Q4JavaDatabase {
                         input.nextLine();
                     } catch (InputMismatchException ime) {
                         System.out.println("Invalid speed preference, default to priority");
+                        input.nextLine();
                         speed = 1;
                     }
                     System.out.print("Enter the origin: ");
