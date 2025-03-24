@@ -1,7 +1,7 @@
 /*
  * COMP 421 - Project 3 - Group 4
  *
- * Option 3: Add a new Order to the Order table.
+ * Option 3: Add a new order to the order table. Update associated tables as well
  * This method takes a Statement, an Order ID, and a Scanner.
  */
 
