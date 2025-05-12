@@ -1,4 +1,4 @@
-# COMP421P3 - The JDBC Program of KABY 🚚
+# McGill University COMP421P3 - The JDBC Program of KABY 🚚
 
 KABY is a fictional logistics company that provides global C2C delivery services. The company's structure is modelled on a generalised representation of delivery companies like DHL, UPS, etc. The name KABY is based on the first letter of each group member's name.
 
@@ -60,3 +60,8 @@ Follows (RegistrationID, RouteID, OrderID)
 
 Stores (Location, GoodsID)
 > Check on the goods are stored at each warehouse. This table references Warehouse and Goods
+
+## Setting Things Up
+KABY's SQL database was built in IBM's DB2. Thus, a db2 JAR file is needed to gain the packages necessary for connecting to the DB2 database.
+In Q4JavaDatabase.java, the URL to a DB2 server as well as the username and password for the account have to be provided.
+In the course, the JAR file was provided by the teaching staff and our program would connect to McGill's DB2 servers with our group account.
