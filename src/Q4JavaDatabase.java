@@ -1,6 +1,6 @@
 /*
  * COMP 421 - Project 3 - Group 04
- * Written by: Belal Yousofzai & Kassem Yassine
+ * Written by: @BY3D and @KassemYassine
  */
 
 import com.ibm.db2.jcc.DB2Driver;
