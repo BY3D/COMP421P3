@@ -16,10 +16,10 @@ public class Q4JavaDatabase {
         // Register the DB2 Driver
         try {DriverManager.registerDriver(new DB2Driver());}
         catch (Exception cnfe){ System.out.println("Driver Class not found"); }
-        // Connect to DB2
-        String url = "jdbc:db2://winter2025-comp421.cs.mcgill.ca:50000/comp421";
-        String groupId = "cs421g04";
-        String groupPassword = System.getenv("SOCSPASSWD"); // This can be given as an environment variable for now
+        // Connect to DB2 - Values cleared as they connected to McGill's server
+        String url = ""; // URL to DB2 server
+        String groupId = ""; // Username of server account
+        String groupPassword = System.getenv("");
         Connection connectDB2 = DriverManager.getConnection (url, groupId, groupPassword);
         Statement statement = connectDB2.createStatement();
         // The primary loop which the user interacts with
