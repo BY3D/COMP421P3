@@ -13,7 +13,7 @@ In the course COMP-421: Database Systems, Our group developed KABY over three pr
 
 ## The Relational Schema
 
-The relational schema defines the SQL tables of KABY. Around 300 realistic records were created for the project, with the records representing the worldwide logistical activities of KABY
+The relational schema defines the SQL tables of KABY. Around 300 realistic records were created for the project, with the records representing the worldwide logistical activities of KABY. A sample of the records can be provided upon request
 
 ### The Entities
 
