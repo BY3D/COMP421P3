@@ -64,4 +64,7 @@ Stores (Location, GoodsID)
 ## Setting Things Up
 KABY's SQL database was built in IBM's DB2. Thus, a db2 JAR file is needed to gain the packages necessary for connecting to the DB2 database.
 In Q4JavaDatabase.java, the URL to a DB2 server as well as the username and password for the account have to be provided.
-In the course, the JAR file was provided by the teaching staff and our program would connect to McGill's DB2 servers with our group account.
+In the course, the JAR file was provided by the teaching staff and our program would connect to McGill's DB2 servers with our group account
+
+## Gratitudes
+I would like to thank the Professors, teaching assistants, group members, and peers for making COMP 421 an enjoyable & educational course
